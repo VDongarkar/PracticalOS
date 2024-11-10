@@ -1,0 +1,96 @@
+#!/bin/sh
+ADDRESS_BOOK="address_book.txt"
+create(){
+	echo "Address book created"
+	> "$ADDRESS_BOOK"
+}
+
+view(){
+	if [ -s "$ADDRESS_BOOK" ];
+	then 
+		echo "***Address Book***"
+		nl "$ADDRESS_BOOK"
+	else
+		echo "address book is empty"
+	fi
+}
+
+insert(){
+	echo "enter records"
+	echo -n "Enter name: "
+	read name
+	echo -n "Enter phoneno: "
+	read phone
+	
+	echo "$name, $phone" >> "$ADDRESS_BOOK"
+	
+	echo "Record insrted"
+}
+
+delete(){
+	echo "enter phone no to delete record"
+	read num
+	
+	len=$(grep -c "$num" "$ADDRESS_BOOK")
+	
+	if [[ "$len" -gt 0 ]]
+	then
+		sed -i "/$num/d" "$ADDRESS_BOOK"
+	else
+		echo 'record is not present'
+	fi
+
+}
+
+modify() {
+    echo "Enter the phone number of the record to modify:"
+    read old_num
+
+   
+    len=$(grep -c "$old_num" "$ADDRESS_BOOK")
+
+    if [ "$len" -gt 0 ]; then
+        
+        
+        
+        echo "Enter new name:"
+        read new_name
+        echo "Enter new phone number:"
+        read new_num
+
+        
+        new_record="$new_name $new_num"
+
+        
+        sed -i "/$old_num/c\\$new_record" "$ADDRESS_BOOK"
+        echo "Record modified successfully"
+    else
+        echo "Record not found"
+    fi
+}
+
+
+while [ true ]
+do
+	echo '****menu****'
+	echo '1. create address book'
+	echo '2. view address book'
+	echo '3. insert record'
+	echo '4. delete record'
+	echo '5. modify record'
+	echo '7. exit'
+	
+	echo 'enter your choice'
+	read choice
+	
+	case $choice in
+		1) create ;;
+		2) view ;;
+		3) insert ;;
+		4) delete ;;
+		5) modify ;;
+		6) exit ;;
+		*) echo 'enter correct choice' ;;
+	esac
+done
+	
